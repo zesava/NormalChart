@@ -2,7 +2,9 @@
 
 WinCC Advanced DataLog APP
 
-![Image](../ScreenShots/1.jpg?raw=true)
+![Image](/ScreenShots/1.jpg?raw=true)
+
+![Image](/ScreenShots/2.jpg?raw=true)
 
 With this you can:
 - Log data using custom intervals or events inside PLC
