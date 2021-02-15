@@ -15,17 +15,17 @@ With this you can:
 
 ### Prerequisites
 
-WinCC flexible or advanced
-MSSQL Server
-
+- WinCC flexible or advanced
+- MSSQL Server
+- Basic knowledge of VBA script
 
 ### Installing
 
 Don't need to install just copy files to your work directory. You need 3 files
 
--ZedGraph.dll
--NormalChart.exe
--DBSetup.sql
+- ZedGraph.dll
+- NormalChart.exe
+- DBSetup.sql
 
 a short video about setup
 https://www.youtube.com/watch?v=3uZ70vLMB6w
