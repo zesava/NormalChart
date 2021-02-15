@@ -43,6 +43,7 @@
             this.tbtnAbout = new System.Windows.Forms.ToolStripButton();
             this.tbtnSettings = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tmrLoading = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new TablessControl();
             this.pgChart = new System.Windows.Forms.TabPage();
             this.lblLoading = new System.Windows.Forms.Label();
@@ -84,7 +85,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCreateDataLog = new System.Windows.Forms.Button();
             this.tbNameFilter = new NormalChart.PlaceHolderTextBox();
-            this.tmrLoading = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -201,7 +201,7 @@
             "1 day"});
             this.tbtnResolution.Name = "tbtnResolution";
             this.tbtnResolution.Size = new System.Drawing.Size(75, 40);
-            this.tbtnResolution.Text = "15 min";
+            this.tbtnResolution.SelectedIndex = 0;
             this.tbtnResolution.SelectedIndexChanged += new System.EventHandler(this.tbtnResolution_SelectedIndexChanged);
             // 
             // tbtnForward
@@ -262,6 +262,10 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(789, 413);
             this.tableLayoutPanel1.TabIndex = 7;
+            // 
+            // tmrLoading
+            // 
+            this.tmrLoading.Tick += new System.EventHandler(this.tmrLoading_Tick);
             // 
             // tabControl
             // 
@@ -761,10 +765,6 @@
             this.tbNameFilter.Text = "Name Filter...";
             this.tbNameFilter.TextChanged += new System.EventHandler(this.tbNameFilter_TextChanged);
             // 
-            // tmrLoading
-            // 
-            this.tmrLoading.Tick += new System.EventHandler(this.tmrLoading_Tick);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,6 +773,8 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainForm";
             this.Text = "Normal Chart";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

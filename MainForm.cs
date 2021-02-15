@@ -49,13 +49,13 @@ namespace NormalChart
 
                     foreach (var LogId in names)
                     {
-                        DataRow amountRow = _chart.AviableCurves.Select("LogId = "+ LogId).FirstOrDefault();
+                        DataRow amountRow = _chart.AviableCurves.Select("LogId = " + LogId).FirstOrDefault();
                         if (amountRow != null)
                             _chart.MoveDataRowRight(amountRow);
                     }
                     DisableEditMode();
                     DrawSelected();
-                 }
+                }
             }
 
             dtp1.Size = new Size(140, 20);
@@ -64,7 +64,7 @@ namespace NormalChart
             dtp1.ValueChanged += new EventHandler(dtp1OnChange);
 
             var datePicker = new ToolStripControlHost(dtp1);
-            datePicker.Margin = new Padding(5,0,5,0);
+            datePicker.Margin = new Padding(5, 0, 5, 0);
             toolStrip1.Items.Insert(5, datePicker);
 
 
@@ -74,7 +74,7 @@ namespace NormalChart
             lbSelectedCurves.DisplayMember = "Descr";
             lbSelectedCurves.ValueMember = "LogId";
             lbSelectedCurves.DataSource = _chart.SelectedCurves;
-         }
+        }
 
 
         private void ReloadLeftListBox(object s, EventArgs e)
@@ -320,7 +320,7 @@ namespace NormalChart
                     _sp.Resolution = -1440;
                     break;
             }
-            LoadData(); 
+            LoadData();
         }
 
         private void tbtnBack_Click(object sender, EventArgs e)
@@ -345,7 +345,7 @@ namespace NormalChart
         private void dtp1OnChange(object sender, EventArgs e)
         {
             _sp.StartDateTime = dtp1.Value.ToString("yyyy-MM-dd HH:mm:ss");
-            LoadData(); 
+            LoadData();
         }
 
         private void tbtnAbout_Click(object sender, EventArgs e)
@@ -538,7 +538,7 @@ namespace NormalChart
                 {
                     str50 = Utils.Truncate(row.Cells[1].Value.ToString(), 50);
                     l.Add(str50);
-                  }
+                }
             }
             int nrows = _chart.AddLogTag(l);
             MessageBox.Show(nrows.ToString() + " Datalogs was added", "INFORMATION",
@@ -597,7 +597,7 @@ namespace NormalChart
                 }
             }
             e.Result = AviableServers;
-         }
+        }
 
         private void ListOfAviableServers(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -608,7 +608,7 @@ namespace NormalChart
             btnFindServers.Enabled = true;
         }
 
-       private void btnSetupDB_Click(object sender, EventArgs e)
+        private void btnSetupDB_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("CAUTION. This will DELETE all data and rebuild database. Continue?", "Confirmation",
                 MessageBoxButtons.YesNo,
@@ -621,7 +621,7 @@ namespace NormalChart
 
         }
 
-       private void btnBackupDB_Click(object sender, EventArgs e)
+        private void btnBackupDB_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.Filter = "SQL SERVER database backup files|*.bak";
@@ -645,7 +645,7 @@ namespace NormalChart
         }
 
         #region Restore DB
- 
+
         private void btnRestoreDB_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
@@ -657,7 +657,7 @@ namespace NormalChart
                 Progress = new ProgressForm();
                 Progress.Message = "DB restore in progress, please wait...";
                 Progress.Canceled += new EventHandler<EventArgs>(buttonCancel_Click);
-       
+
                 bgvRestoreDB.WorkerSupportsCancellation = true;
                 bgvRestoreDB.DoWork += startbgvRestoreDB;
                 bgvRestoreDB.RunWorkerCompleted += RestoreDB_Completed;
@@ -737,8 +737,26 @@ namespace NormalChart
             numberOfPoints = (numberOfPoints + 1) % (maxPoints + 1);
         }
         #endregion
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            Location = Properties.Settings.Default.MFRM_LOC;
+            Size = Properties.Settings.Default.MFRM_SIZE;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (WindowState == FormWindowState.Normal)
+            {
+                // save location and size if the state is normal
+                Properties.Settings.Default.MFRM_LOC = Location;
+                Properties.Settings.Default.MFRM_SIZE = Size;
+                Properties.Settings.Default.Save();
+            }
+        }
     }
 }
+
 
 
 
