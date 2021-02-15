@@ -2,6 +2,8 @@
 
 WinCC Advanced DataLog APP
 
+![Image](../ScreenShots/1.jpg?raw=true)
+
 With this you can:
 - Log data using custom intervals or events inside PLC
 - View data as table or chart
@@ -18,9 +20,10 @@ MSSQL Server
 ### Installing
 
 Don't need to install just copy files to your work directory. You need 3 files
-ZedGraph.dll
-NormalChart.exe
-DBSetup.sql
+
+-ZedGraph.dll
+-NormalChart.exe
+-DBSetup.sql
 
 a short video about setup
 https://www.youtube.com/watch?v=3uZ70vLMB6w
