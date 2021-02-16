@@ -37,14 +37,15 @@ Download example project
 https://drive.google.com/file/d/1IflmZVjEgmpi-la_DUQGQ_xlvKRZd5pj/view
 
 Command line arguments\
--l <curveID1,curveID2,curveID3>  example NormalChart.exe -l 1,2 will load datalog with ID 1 and 2
+-l <curveID1,curveID2,curveID3>\
+example NormalChart.exe -l 1,2 will load datalog with ID 1 and 2
 -b  start program without window controls(borderless)\
 -r <range_value> start programm with defined time range\
  0(default) - 15min\
  1 - 30 min\
  2 - 1 Hour\
- 3- 12 Hours\
- 4- 1 Day
+ 3 - 12 Hours\
+ 4 - 1 Day
  
 
 ## License
