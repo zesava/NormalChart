@@ -43,7 +43,6 @@
             this.tbtnAbout = new System.Windows.Forms.ToolStripButton();
             this.tbtnSettings = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tmrLoading = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new TablessControl();
             this.pgChart = new System.Windows.Forms.TabPage();
             this.lblLoading = new System.Windows.Forms.Label();
@@ -53,7 +52,6 @@
             this.pgCurvesList = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnApply = new System.Windows.Forms.Button();
             this.btnRemAllCurves = new System.Windows.Forms.Button();
             this.btnRemoveCurve = new System.Windows.Forms.Button();
             this.btnAddCurve = new System.Windows.Forms.Button();
@@ -85,6 +83,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCreateDataLog = new System.Windows.Forms.Button();
             this.tbNameFilter = new NormalChart.PlaceHolderTextBox();
+            this.tmrLoading = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -187,7 +186,7 @@
             this.tbtnBack.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnBack.Name = "tbtnBack";
             this.tbtnBack.Size = new System.Drawing.Size(50, 37);
-            this.tbtnBack.Text = "toolStripButton1";
+            this.tbtnBack.Text = "Backward";
             this.tbtnBack.Click += new System.EventHandler(this.tbtnBack_Click);
             // 
             // tbtnResolution
@@ -201,7 +200,7 @@
             "1 day"});
             this.tbtnResolution.Name = "tbtnResolution";
             this.tbtnResolution.Size = new System.Drawing.Size(75, 40);
-            this.tbtnResolution.SelectedIndex = 0;
+            this.tbtnResolution.Text = "15 min";
             this.tbtnResolution.SelectedIndexChanged += new System.EventHandler(this.tbtnResolution_SelectedIndexChanged);
             // 
             // tbtnForward
@@ -213,7 +212,7 @@
             this.tbtnForward.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnForward.Name = "tbtnForward";
             this.tbtnForward.Size = new System.Drawing.Size(50, 37);
-            this.tbtnForward.Text = "toolStripButton1";
+            this.tbtnForward.Text = "Forward";
             this.tbtnForward.Click += new System.EventHandler(this.tbtnForward_Click);
             // 
             // toolStripSeparator2
@@ -231,7 +230,7 @@
             this.tbtnAbout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnAbout.Name = "tbtnAbout";
             this.tbtnAbout.Size = new System.Drawing.Size(50, 37);
-            this.tbtnAbout.Text = "toolStripButton2";
+            this.tbtnAbout.Text = "About";
             this.tbtnAbout.Click += new System.EventHandler(this.tbtnAbout_Click);
             // 
             // tbtnSettings
@@ -244,7 +243,7 @@
             this.tbtnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tbtnSettings.Name = "tbtnSettings";
             this.tbtnSettings.Size = new System.Drawing.Size(50, 37);
-            this.tbtnSettings.Text = "toolStripButton1";
+            this.tbtnSettings.Text = "Settings";
             this.tbtnSettings.Click += new System.EventHandler(this.tbtnSettings_Click);
             // 
             // tableLayoutPanel1
@@ -262,10 +261,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(789, 413);
             this.tableLayoutPanel1.TabIndex = 7;
-            // 
-            // tmrLoading
-            // 
-            this.tmrLoading.Tick += new System.EventHandler(this.tmrLoading_Tick);
             // 
             // tabControl
             // 
@@ -359,6 +354,7 @@
             this.pgCurvesList.TabIndex = 2;
             this.pgCurvesList.Text = "Curves";
             this.pgCurvesList.UseVisualStyleBackColor = true;
+            this.pgCurvesList.Leave += new System.EventHandler(this.pgCurvesList_Leave);
             // 
             // tableLayoutPanel2
             // 
@@ -388,7 +384,6 @@
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.btnApply, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.btnRemAllCurves, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.btnRemoveCurve, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.btnAddCurve, 0, 0);
@@ -403,17 +398,6 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(194, 270);
             this.tableLayoutPanel3.TabIndex = 4;
-            // 
-            // btnApply
-            // 
-            this.btnApply.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnApply.Location = new System.Drawing.Point(59, 183);
-            this.btnApply.Name = "btnApply";
-            this.btnApply.Size = new System.Drawing.Size(75, 23);
-            this.btnApply.TabIndex = 3;
-            this.btnApply.Text = "APPLY";
-            this.btnApply.UseVisualStyleBackColor = true;
-            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // btnRemAllCurves
             // 
@@ -765,6 +749,10 @@
             this.tbNameFilter.Text = "Name Filter...";
             this.tbNameFilter.TextChanged += new System.EventHandler(this.tbNameFilter_TextChanged);
             // 
+            // tmrLoading
+            // 
+            this.tmrLoading.Tick += new System.EventHandler(this.tmrLoading_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,6 +761,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainForm";
             this.Text = "Normal Chart";
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.toolStrip1.ResumeLayout(false);
@@ -819,7 +808,6 @@
         private System.Windows.Forms.Button btnAddCurve;
         private System.Windows.Forms.Button btnRemAllCurves;
         private System.Windows.Forms.Button btnRemoveCurve;
-        private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.ToolStripComboBox tbtnResolution;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tbtnForward;

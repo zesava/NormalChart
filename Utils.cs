@@ -5,7 +5,6 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 
@@ -162,20 +161,20 @@ namespace NormalChart
                 // Get all rows from the Sheet
                 cmd.CommandText = "SELECT [Name],[DataType],[Path] FROM [" + dtSheet.Rows[0]["TABLE_NAME"].ToString() + "]";
 
-                DataTable dt = new DataTable();
-                OleDbDataAdapter da = new OleDbDataAdapter(cmd);
-                da.Fill(dt);
-                cmd = null;
-                conn.Close();
+                    DataTable dt = new DataTable();
+                    OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                    da.Fill(dt);
+                    cmd = null;
+                    conn.Close();
 
-                DataColumn newColumn = new DataColumn("Log It", typeof(Boolean))
-                {
-                    DefaultValue = false
-                };
-                dt.Columns.Add(newColumn);
-                newColumn.SetOrdinal(0);
+                    DataColumn newColumn = new DataColumn("Log It", typeof(Boolean))
+                    {
+                        DefaultValue = false
+                    };
+                    dt.Columns.Add(newColumn);
+                    newColumn.SetOrdinal(0);
 
-                return dt;
+                    return dt;
             }
         }
 
@@ -189,6 +188,14 @@ namespace NormalChart
                 source = source.Substring(0, length);
             }
             return source;
+        }
+
+        /// <summary>
+        /// Limit integer value to specified range
+        /// </summary>
+        public static int Limit(int value, int min, int max)
+        {
+            return (value < min) ? min : (value > max) ? max : value;
         }
 
     }

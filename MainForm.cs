@@ -56,6 +56,18 @@ namespace NormalChart
                     DisableEditMode();
                     DrawSelected();
                 }
+                if (a == "-b")
+                {
+                    FormBorderStyle = FormBorderStyle.None;
+                    ShowInTaskbar = false;
+                }
+                if (a == "-r")
+                {
+                    string srt1 = commandLineArgs[i + 1];
+                    int.TryParse(srt1, out int res);
+                    res = Utils.Limit(res, 0, 4);
+                    tbtnResolution.SelectedIndex = res;
+                }
             }
 
             dtp1.Size = new Size(140, 20);
@@ -100,6 +112,7 @@ namespace NormalChart
             btnImportTags.Visible = false;
             button1.Visible = false;
             button3.Visible = false;
+            tbtnAbout.Visible = false;
         }
 
         private void ApplyStyle(short id = 0)
@@ -179,14 +192,12 @@ namespace NormalChart
 
         private void DrawCharts(DataTable data)
         {
-
             GraphPane pane = zedGraph.GraphPane;
-
             pane.CurveList.Clear();
             pane.YAxisList.Clear();
             pane.GraphObjList.Clear();
             dataGridView.DataSource = null;
-
+                        
             if (data.Rows.Count > 1)
             {
                 ushort colorIdx = 0; // this will auto increment with each new curve in list
@@ -251,6 +262,20 @@ namespace NormalChart
                 }
                 zedGraph.AxisChange();
             }
+            //If zedGraph IsEnabled and there is no data for selected range, it will crash while zooming!
+            if (pane.CurveList.Count == 0)
+            {
+                zedGraph.Enabled = false;
+                pane.Title.Text = "There is NO DATA available for selected period";
+                pane.Title.IsVisible = true;
+                pane.Title.FontSpec.FontColor = Color.White;
+            }
+            else
+            {
+                pane.Title.IsVisible = false;
+                zedGraph.Enabled = true;
+            }
+
             zedGraph.IsShowPointValues = true;
             zedGraph.Invalidate();
             GC.Collect();
@@ -394,11 +419,6 @@ namespace NormalChart
                 _chart.SelectedCurves.DefaultView.RowFilter = "Descr LIKE '%" + tbSelectedCurves.Text + "%'";
         }
 
-        private void btnApply_Click(object sender, EventArgs e)
-        {
-            DrawSelected();
-        }
-
         private void DrawSelected()
         {
             _sp.LogID.Clear();
@@ -417,25 +437,33 @@ namespace NormalChart
             if (result == DialogResult.OK) // Test result.
             {
                 string file = dlg.FileName;
-                dgvTags.DataSource = Utils.ReadExcelFile(file);
-                dgvTags.ReadOnly = false;
-                foreach (DataGridViewColumn col in dgvTags.Columns)
+                try
                 {
-                    col.ReadOnly = true;
+
+                    dgvTags.DataSource = Utils.ReadExcelFile(file);
+                    dgvTags.ReadOnly = false;
+                    foreach (DataGridViewColumn col in dgvTags.Columns)
+                    {
+                        col.ReadOnly = true;
+                    }
+                    dgvTags.Columns[0].ReadOnly = false;
+
+                    //TODO: There is strange bug with select all checkboxes when column is sortable
+                    //dgvTags.Columns[0].SortMode = DataGridViewColumnSortMode.Automatic; //
+
+                    if (HeaderCheckBox == null)
+                    {
+                        HeaderCheckBox = new CheckBox();
+                        HeaderCheckBox.Size = new Size(15, 15);
+                        dgvTags.Controls.Add(HeaderCheckBox);
+                        HeaderCheckBox.CheckedChanged += cb_CheckedChanged;
+                    }
+                    tabControl.SelectedIndex = 4;
                 }
-                dgvTags.Columns[0].ReadOnly = false;
-
-                //TODO: There is strange bug with select all checkboxes when column is sortable
-                //dgvTags.Columns[0].SortMode = DataGridViewColumnSortMode.Automatic; //
-
-                if (HeaderCheckBox == null)
+                catch (Exception)
                 {
-                    HeaderCheckBox = new CheckBox();
-                    HeaderCheckBox.Size = new Size(15, 15);
-                    dgvTags.Controls.Add(HeaderCheckBox);
-                    HeaderCheckBox.CheckedChanged += cb_CheckedChanged;
+                    MessageBox.Show("Incorrect excel file. Only TIA portal export excel files are supported", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                tabControl.SelectedIndex = 4;
             }
         }
 
@@ -489,6 +517,11 @@ namespace NormalChart
                             "INFO",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
+        }
+
+        private void pgCurvesList_Leave(object sender, EventArgs e)
+        {
+            DrawSelected();
         }
 
         #endregion
