@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,10 +14,8 @@ namespace NormalChart
 
     public partial class MainForm : Form
     {
-        SQLParams _sp = new SQLParams();
         ChartData _chart = new ChartData();
-
-        ProgressForm Progress;
+        private ProgressForm Progress;
 
         private string OnPointValueRequested(object sender, GraphPane pane, CurveItem curve, int pointIndex)
         {
@@ -30,15 +29,43 @@ namespace NormalChart
         {
             InitializeComponent();
 
-            _chart.ChangedAviableCurves += new EventHandler(ReloadLeftListBox);
-            _chart.NoConnection += new EventHandler(NoConn);
-            _chart.SetServer(Properties.Settings.Default.SERVER);
+            _chart.ChangedAviableCurves += ReloadLeftListBox;
+            _chart.sqlError += SQL_Error;
+            _chart.NewDBData += DrawNewData;
 
             ApplyStyle();
             zedGraph.PointValueEvent += OnPointValueRequested;
 
-            string[] commandLineArgs = Environment.GetCommandLineArgs();
+            #region Add DateTime Picker to toolbar
+            dtp1.Size = new Size(140, 20);
+            dtp1.ValueChanged += new EventHandler(dtp1OnChange);
+            var datePicker = new ToolStripControlHost(dtp1);
+            datePicker.Margin = new Padding(5, 0, 5, 0);
+            toolStrip1.Items.Insert(5, datePicker);
+            string customDTFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " HH:mm:ss";
+            dtp1.Format = DateTimePickerFormat.Custom;
+            dtp1.CustomFormat = customDTFormat;
+            datePicker.Enabled = false;
+            #endregion
 
+            if (_chart.Connect(Properties.Settings.Default.SERVER))
+            {
+                EnableCtrls();
+            }
+            else
+            {
+                tabControl.SelectedIndex = 3;
+            }
+
+            lbAviableCurves.DisplayMember = "Descr";
+            lbAviableCurves.ValueMember = "LogId";
+
+            lbSelectedCurves.DisplayMember = "Descr";
+            lbSelectedCurves.ValueMember = "LogId";
+            lbSelectedCurves.DataSource = _chart.SelectedCurves;
+
+            #region CMD Args
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
             for (int i = 0; i < commandLineArgs.Length; i++)
             {
                 string a = commandLineArgs[i];
@@ -54,7 +81,7 @@ namespace NormalChart
                             _chart.MoveDataRowRight(amountRow);
                     }
                     DisableEditMode();
-                    DrawSelected();
+                    TopMost = true;
                 }
                 if (a == "-b")
                 {
@@ -65,27 +92,11 @@ namespace NormalChart
                 {
                     string srt1 = commandLineArgs[i + 1];
                     int.TryParse(srt1, out int res);
-                    res = Utils.Limit(res, 0, 4);
+                    res = Utils.LimitINT(res, 0, 4);
                     tbtnResolution.SelectedIndex = res;
                 }
             }
-
-            dtp1.Size = new Size(140, 20);
-            dtp1.Format = DateTimePickerFormat.Custom;
-            dtp1.CustomFormat = "dd.MM.yyyy HH:mm:ss";
-            dtp1.ValueChanged += new EventHandler(dtp1OnChange);
-
-            var datePicker = new ToolStripControlHost(dtp1);
-            datePicker.Margin = new Padding(5, 0, 5, 0);
-            toolStrip1.Items.Insert(5, datePicker);
-
-
-            lbAviableCurves.DisplayMember = "Descr";
-            lbAviableCurves.ValueMember = "LogId";
-
-            lbSelectedCurves.DisplayMember = "Descr";
-            lbSelectedCurves.ValueMember = "LogId";
-            lbSelectedCurves.DataSource = _chart.SelectedCurves;
+            #endregion
         }
 
 
@@ -94,13 +105,18 @@ namespace NormalChart
             lbAviableCurves.DataSource = _chart.AviableCurves;
         }
 
-        private void NoConn(object s, EventArgs e)
+        private void SQL_Error(object s, ChartDataErrEventArgs e)
         {
-            MessageBox.Show("No connection to server !",
+            MessageBox.Show(e.ErrMsg,
                             "ERROR",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error);
             tabControl.SelectedIndex = 3;
+        }
+
+        private void DrawNewData(object s, ChartDataEventArgs e)
+        {
+            DrawCharts(e.Data);
         }
 
         private void DisableEditMode()
@@ -186,8 +202,6 @@ namespace NormalChart
             //dataGridView.RowsDefaultCellStyle.BackColor = Style.Styles[id].BackgroundColor;
             #endregion
 
-            lblLoading.BackColor = Style.Styles[id].BackgroundColor;
-            lblLoading.ForeColor = Style.Styles[id].MainColor;
         }
 
         private void DrawCharts(DataTable data)
@@ -197,7 +211,7 @@ namespace NormalChart
             pane.YAxisList.Clear();
             pane.GraphObjList.Clear();
             dataGridView.DataSource = null;
-                        
+
             if (data.Rows.Count > 1)
             {
                 ushort colorIdx = 0; // this will auto increment with each new curve in list
@@ -281,6 +295,24 @@ namespace NormalChart
             GC.Collect();
         }
 
+        private void EnableCtrls()
+        {
+            foreach (ToolStripItem tsb in toolStrip1.Items)
+            {
+                if (tsb is ToolStripSeparator)
+                {
+                    //do nothing
+                }
+                else
+                {
+                    tsb.Enabled = true;
+                }
+            }
+            btnSetupDB.Enabled = true;
+            btnBackupDB.Enabled = true;
+            btnRestoreDB.Enabled = true;
+        }
+
         #region Toolbar buttons
 
         private void tbtnShowTable_Click(object sender, System.EventArgs e)
@@ -293,7 +325,6 @@ namespace NormalChart
             if (tabControl.SelectedIndex != 0)
             {
                 tabControl.SelectedIndex = 0;
-
             }
         }
 
@@ -309,6 +340,7 @@ namespace NormalChart
                 SaveFileDialog dlg = new SaveFileDialog();
                 dlg.Title = "Save charts as a table values";
                 dlg.Filter = "CSV Files | *.csv";
+                dlg.FileName = "Log_" + dtp1.Value.ToString("yyyy-MM-dd_HHmm");
 
                 DialogResult result = dlg.ShowDialog(); // Show the dialog.
                 if (result == DialogResult.OK) // Test result.
@@ -330,47 +362,48 @@ namespace NormalChart
             switch (tbtnResolution.SelectedIndex)
             {
                 case 0:
-                    _sp.Resolution = -15;
+                    _chart.SqlP.Resolution = -15;
                     break;
                 case 1:
-                    _sp.Resolution = -30;
+                    _chart.SqlP.Resolution = -30;
                     break;
                 case 2:
-                    _sp.Resolution = -60;
+                    _chart.SqlP.Resolution = -60;
                     break;
                 case 3:
-                    _sp.Resolution = -720;
+                    _chart.SqlP.Resolution = -720;
                     break;
                 case 4:
-                    _sp.Resolution = -1440;
+                    _chart.SqlP.Resolution = -1440;
                     break;
             }
-            LoadData();
         }
 
         private void tbtnBack_Click(object sender, EventArgs e)
         {
-            dtp1.Value = dtp1.Value.Subtract(new TimeSpan(0, 0, Math.Abs(_sp.Resolution), 0, 0));
+            dtp1.Value = dtp1.Value.Subtract(new TimeSpan(0, 0, Math.Abs(_chart.SqlP.Resolution), 0, 0));
         }
 
         private void tbtnForward_Click(object sender, EventArgs e)
         {
-            dtp1.Value = dtp1.Value.Add(new TimeSpan(0, 0, Math.Abs(_sp.Resolution), 0, 0));
+            dtp1.Value = dtp1.Value.Add(new TimeSpan(0, 0, Math.Abs(_chart.SqlP.Resolution), 0, 0));
         }
-
 
         private void tbtnSettings_Click(object sender, EventArgs e)
         {
             cmbServerName.Text = Properties.Settings.Default.SERVER;
-            //tbDatabase.Text = Properties.Settings.Default.DATABASE;
             tabControl.SelectedIndex = 3;
         }
 
         DateTimePicker dtp1 = new DateTimePicker();
         private void dtp1OnChange(object sender, EventArgs e)
         {
-            _sp.StartDateTime = dtp1.Value.ToString("yyyy-MM-dd HH:mm:ss");
-            LoadData();
+            _chart.SqlP.StartDateTime = dtp1.Value.ToString();
+        }
+
+        private void tbtnRefresh_Click(object sender, EventArgs e)
+        {
+            dtp1.Value = DateTime.Now;
         }
 
         private void tbtnAbout_Click(object sender, EventArgs e)
@@ -386,7 +419,7 @@ namespace NormalChart
         {
             if (lbAviableCurves.SelectedIndex >= 0)
             {
-                _chart.MoveDataRowRight(((DataRowView)lbAviableCurves.SelectedItem).Row);
+               _chart.MoveDataRowRight(((DataRowView)lbAviableCurves.SelectedItem).Row);
             }
         }
 
@@ -402,7 +435,6 @@ namespace NormalChart
         {
             while (_chart.SelectedCurves.Rows.Count > 0)
             {
-
                 _chart.MoveDataRowLeft(_chart.SelectedCurves.Rows[0]);
             }
         }
@@ -417,16 +449,6 @@ namespace NormalChart
         {
             if (tbSelectedCurves.Text != tbSelectedCurves.PlaceHolderText)
                 _chart.SelectedCurves.DefaultView.RowFilter = "Descr LIKE '%" + tbSelectedCurves.Text + "%'";
-        }
-
-        private void DrawSelected()
-        {
-            _sp.LogID.Clear();
-            foreach (DataRow r in _chart.SelectedCurves.Rows)
-            {
-                _sp.LogID.Add((int)r[0]);
-            }
-            LoadData();
         }
 
         private void btnImportTags_Click(object sender, EventArgs e)
@@ -458,6 +480,7 @@ namespace NormalChart
                         dgvTags.Controls.Add(HeaderCheckBox);
                         HeaderCheckBox.CheckedChanged += cb_CheckedChanged;
                     }
+                    HeaderCheckBox.Checked = false;
                     tabControl.SelectedIndex = 4;
                 }
                 catch (Exception)
@@ -521,7 +544,7 @@ namespace NormalChart
 
         private void pgCurvesList_Leave(object sender, EventArgs e)
         {
-            DrawSelected();
+           _chart.SqlP.ForceDataReload = true;
         }
 
         #endregion
@@ -573,6 +596,7 @@ namespace NormalChart
                     l.Add(str50);
                 }
             }
+            tabControl.SelectedIndex = 2;
             int nrows = _chart.AddLogTag(l);
             MessageBox.Show(nrows.ToString() + " Datalogs was added", "INFORMATION",
             MessageBoxButtons.OK,
@@ -597,7 +621,10 @@ namespace NormalChart
         {
             Properties.Settings.Default.SERVER = cmbServerName.Text;
             Properties.Settings.Default.Save();
-            _chart.SetServer(Properties.Settings.Default.SERVER);
+            if (_chart.Connect(Properties.Settings.Default.SERVER))
+            {
+                EnableCtrls();
+            }
         }
 
         private void btnFindServers_Click(object sender, EventArgs e)
@@ -717,7 +744,7 @@ namespace NormalChart
             }
             else
             {
-                Progress.Message = "Database successfully restored.";
+                Progress.Message = "Database successfully restored.\nPlease RESTART program.";
                 Progress.Done = true;
             }
             // general cleanup code, runs when there was an error or not.
@@ -737,40 +764,7 @@ namespace NormalChart
 
         #endregion
 
-        #region Load Data
-        private void LoadData()
-        {
-            lblLoading.Visible = true;
-            tmrLoading.Interval = 500;
-            tmrLoading.Enabled = true;
-            BackgroundWorker bgvGetData = new BackgroundWorker();
-            bgvGetData.WorkerSupportsCancellation = true;
-            bgvGetData.DoWork += startLoadingData;
-            bgvGetData.RunWorkerCompleted += DataLoaded;
-            bgvGetData.RunWorkerAsync();
-        }
-
-        private void startLoadingData(object sender, DoWorkEventArgs e)
-        {
-            e.Result = _chart.GetData(_sp);
-        }
-
-        private void DataLoaded(object sender, RunWorkerCompletedEventArgs e)
-        {
-            DrawCharts((DataTable)e.Result);
-            tmrLoading.Enabled = false;
-            lblLoading.Visible = false;
-        }
-
-        private int numberOfPoints = 0;
-        private void tmrLoading_Tick(object sender, EventArgs e)
-        {
-            int maxPoints = 3;
-            lblLoading.Text = "Loading data" + new string('.', numberOfPoints);
-            numberOfPoints = (numberOfPoints + 1) % (maxPoints + 1);
-        }
-        #endregion
-
+        #region MainForm Events
         private void MainForm_Load(object sender, EventArgs e)
         {
             Location = Properties.Settings.Default.MFRM_LOC;
@@ -787,6 +781,8 @@ namespace NormalChart
                 Properties.Settings.Default.Save();
             }
         }
+        #endregion
+
     }
 }
 

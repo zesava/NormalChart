@@ -5,10 +5,25 @@ namespace NormalChart
 {
     public class SQLParams
     {
+        public event EventHandler ParametersChanged;
+        private void OnParametersChanged()
+        {
+            ParametersChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        private string _startDateTime = DateTime.Now.ToString();
+        public string StartDateTime
+        {
+            get { return _startDateTime; }
+            set
+            {
+                _startDateTime = value;
+                OnParametersChanged();
+            }
+        }
+
         private int _resolution = -15;
-
-        public string StartDateTime { get; set; } = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
         public int Resolution
         {
             get
@@ -25,9 +40,18 @@ namespace NormalChart
                 {
                     _resolution = value;
                 }
+                OnParametersChanged();
             }
         }
 
         public List<int> LogID { get; set; } = new List<int> { };
+
+        public bool ForceDataReload
+        {
+            set
+            {
+                OnParametersChanged();
+            }
+        }
     }
 }

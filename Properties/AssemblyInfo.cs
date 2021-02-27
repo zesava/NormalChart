@@ -36,5 +36,5 @@ IF WE MEET SOME DAY, AND YOU THINK THIS STUFF IS WORTH IT, YOU CAN BUY ME A BEER
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.3")]
-[assembly: AssemblyFileVersion("1.3")]
+[assembly: AssemblyVersion("1.4")]
+[assembly: AssemblyFileVersion("1.4")]

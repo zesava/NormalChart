@@ -42,10 +42,10 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.tbtnAbout = new System.Windows.Forms.ToolStripButton();
             this.tbtnSettings = new System.Windows.Forms.ToolStripButton();
+            this.tbtnRefresh = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl = new TablessControl();
             this.pgChart = new System.Windows.Forms.TabPage();
-            this.lblLoading = new System.Windows.Forms.Label();
             this.zedGraph = new ZedGraph.ZedGraphControl();
             this.pgTable = new System.Windows.Forms.TabPage();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -83,7 +83,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCreateDataLog = new System.Windows.Forms.Button();
             this.tbNameFilter = new NormalChart.PlaceHolderTextBox();
-            this.tmrLoading = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -117,7 +116,8 @@
             this.tbtnForward,
             this.toolStripSeparator2,
             this.tbtnAbout,
-            this.tbtnSettings});
+            this.tbtnSettings,
+            this.tbtnRefresh});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(789, 40);
@@ -128,6 +128,7 @@
             // 
             this.tbtnShowChart.AutoSize = false;
             this.tbtnShowChart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnShowChart.Enabled = false;
             this.tbtnShowChart.Image = ((System.Drawing.Image)(resources.GetObject("tbtnShowChart.Image")));
             this.tbtnShowChart.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnShowChart.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -140,6 +141,7 @@
             // 
             this.tbtnShowTable.AutoSize = false;
             this.tbtnShowTable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnShowTable.Enabled = false;
             this.tbtnShowTable.Image = ((System.Drawing.Image)(resources.GetObject("tbtnShowTable.Image")));
             this.tbtnShowTable.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnShowTable.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -152,6 +154,7 @@
             // 
             this.tbtnCurves.AutoSize = false;
             this.tbtnCurves.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnCurves.Enabled = false;
             this.tbtnCurves.Image = ((System.Drawing.Image)(resources.GetObject("tbtnCurves.Image")));
             this.tbtnCurves.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnCurves.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -164,6 +167,7 @@
             // 
             this.tbtnCSV.AutoSize = false;
             this.tbtnCSV.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnCSV.Enabled = false;
             this.tbtnCSV.Image = ((System.Drawing.Image)(resources.GetObject("tbtnCSV.Image")));
             this.tbtnCSV.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnCSV.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -181,6 +185,7 @@
             // 
             this.tbtnBack.AutoSize = false;
             this.tbtnBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnBack.Enabled = false;
             this.tbtnBack.Image = ((System.Drawing.Image)(resources.GetObject("tbtnBack.Image")));
             this.tbtnBack.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnBack.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -192,6 +197,7 @@
             // tbtnResolution
             // 
             this.tbtnResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tbtnResolution.Enabled = false;
             this.tbtnResolution.Items.AddRange(new object[] {
             "15 min",
             "30 min",
@@ -207,6 +213,7 @@
             // 
             this.tbtnForward.AutoSize = false;
             this.tbtnForward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnForward.Enabled = false;
             this.tbtnForward.Image = ((System.Drawing.Image)(resources.GetObject("tbtnForward.Image")));
             this.tbtnForward.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.tbtnForward.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -246,6 +253,18 @@
             this.tbtnSettings.Text = "Settings";
             this.tbtnSettings.Click += new System.EventHandler(this.tbtnSettings_Click);
             // 
+            // tbtnRefresh
+            // 
+            this.tbtnRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnRefresh.Enabled = false;
+            this.tbtnRefresh.Image = ((System.Drawing.Image)(resources.GetObject("tbtnRefresh.Image")));
+            this.tbtnRefresh.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tbtnRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnRefresh.Name = "tbtnRefresh";
+            this.tbtnRefresh.Size = new System.Drawing.Size(40, 37);
+            this.tbtnRefresh.Text = "Refresh";
+            this.tbtnRefresh.Click += new System.EventHandler(this.tbtnRefresh_Click);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -280,25 +299,12 @@
             // 
             // pgChart
             // 
-            this.pgChart.Controls.Add(this.lblLoading);
             this.pgChart.Controls.Add(this.zedGraph);
             this.pgChart.Location = new System.Drawing.Point(4, 22);
             this.pgChart.Name = "pgChart";
             this.pgChart.Size = new System.Drawing.Size(781, 347);
             this.pgChart.TabIndex = 0;
             this.pgChart.Text = "Chart";
-            // 
-            // lblLoading
-            // 
-            this.lblLoading.BackColor = System.Drawing.Color.Transparent;
-            this.lblLoading.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.lblLoading.ForeColor = System.Drawing.Color.Black;
-            this.lblLoading.Location = new System.Drawing.Point(332, 146);
-            this.lblLoading.Name = "lblLoading";
-            this.lblLoading.Size = new System.Drawing.Size(153, 27);
-            this.lblLoading.TabIndex = 4;
-            this.lblLoading.Text = "Loading data...";
-            this.lblLoading.Visible = false;
             // 
             // zedGraph
             // 
@@ -576,7 +582,7 @@
             this.groupBox2.Controls.Add(this.btnODBCSourceAdd);
             this.groupBox2.Location = new System.Drawing.Point(292, 15);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(271, 257);
+            this.groupBox2.Size = new System.Drawing.Size(271, 310);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "WinCC";
@@ -602,7 +608,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Location = new System.Drawing.Point(15, 15);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(271, 257);
+            this.groupBox1.Size = new System.Drawing.Size(271, 310);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "MSSQL";
@@ -619,6 +625,7 @@
             // 
             // btnRestoreDB
             // 
+            this.btnRestoreDB.Enabled = false;
             this.btnRestoreDB.Location = new System.Drawing.Point(30, 209);
             this.btnRestoreDB.Name = "btnRestoreDB";
             this.btnRestoreDB.Size = new System.Drawing.Size(90, 23);
@@ -629,6 +636,7 @@
             // 
             // btnBackupDB
             // 
+            this.btnBackupDB.Enabled = false;
             this.btnBackupDB.Location = new System.Drawing.Point(30, 180);
             this.btnBackupDB.Name = "btnBackupDB";
             this.btnBackupDB.Size = new System.Drawing.Size(90, 23);
@@ -639,6 +647,7 @@
             // 
             // btnSetupDB
             // 
+            this.btnSetupDB.Enabled = false;
             this.btnSetupDB.Location = new System.Drawing.Point(30, 139);
             this.btnSetupDB.Name = "btnSetupDB";
             this.btnSetupDB.Size = new System.Drawing.Size(90, 23);
@@ -749,10 +758,6 @@
             this.tbNameFilter.Text = "Name Filter...";
             this.tbNameFilter.TextChanged += new System.EventHandler(this.tbNameFilter_TextChanged);
             // 
-            // tmrLoading
-            // 
-            this.tmrLoading.Tick += new System.EventHandler(this.tmrLoading_Tick);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -761,7 +766,6 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "MainForm";
             this.Text = "Normal Chart";
-            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.toolStrip1.ResumeLayout(false);
@@ -843,8 +847,7 @@
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Label lblLoading;
-        private System.Windows.Forms.Timer tmrLoading;
+        private System.Windows.Forms.ToolStripButton tbtnRefresh;
     }
 }
 

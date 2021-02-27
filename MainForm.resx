@@ -194,7 +194,17 @@
         H1zuAAAAAElFTkSuQmCC
 </value>
   </data>
-  <metadata name="tmrLoading.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>122, 17</value>
-  </metadata>
+  <data name="tbtnRefresh.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVFhH7Ze9SgNBFIW3tFDExkISsBFLX8EnyEskaQxY
+        +TaCDyGKjSJY5BmCKXwH7fxBzwdeuOCYndnZzaaYAx8LAztzdv723KqoqGhDNRRn4kYsxZt4Fy/iWlyI
+        A9G5GORSfIjvGj7FldgXnWgkXkVo8P+4E1uidZ2LL+EHexATcSS2xa44EWMxF52ZYWa8mWdxKnoRe8Yv
+        05PYE72JDexnJtfMoXj8fSZrIPxpyl0mTHAt0BfPZFMzYWbuaciQN2Mkm7oV9vKUhoYKmTGSTC2EvXhM
+        QwOtMmNEm/Kna4eGRMWYMf6Yyno5UnyU9cHH1irGVFMziGW3ftgOUVplKscM4mBYXxyYaIVM5ZpBXB3W
+        H1dKkrypNsxwqZoZLlsu3WRhovE178Tvht+OGeJ31Jswww/ZzHC61pIkQ2KZ/MwQYYgyrYvQRfgihBHG
+        CGWEM0IaYY3QRngzI2aGkNe6zIwfrA6WqZOZQQR2gjsBPjS4h9PEBl5b9UGpQ8nDtUAJRClESURpRIlE
+        qVRUVLRhqqofiMrK9cRnjGwAAAAASUVORK5CYII=
+</value>
+  </data>
 </root>
