@@ -527,6 +527,8 @@
             this.lbAviableCurves.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.lbAviableCurves.FormattingEnabled = true;
             this.lbAviableCurves.ItemHeight = 18;
+            this.lbAviableCurves.Items.AddRange(new object[] {
+            "test"});
             this.lbAviableCurves.Location = new System.Drawing.Point(3, 33);
             this.lbAviableCurves.Name = "lbAviableCurves";
             this.lbAviableCurves.Size = new System.Drawing.Size(281, 270);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -419,7 +420,10 @@ namespace NormalChart
         {
             if (lbAviableCurves.SelectedIndex >= 0)
             {
-               _chart.MoveDataRowRight(((DataRowView)lbAviableCurves.SelectedItem).Row);
+ //                while (lbAviableCurves.SelectedItems.Count > 0)
+ //               {
+                    _chart.MoveDataRowRight(((DataRowView)lbAviableCurves.SelectedItem).Row);
+ //               }
             }
         }
 
