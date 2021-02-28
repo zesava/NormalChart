@@ -412,6 +412,11 @@ namespace NormalChart
             AboutBox a = new AboutBox();
             a.ShowDialog();
         }
+
+        private void tbtnZoom100_Click(object sender, EventArgs e)
+        {
+            zedGraph.ZoomOutAll(zedGraph.GraphPane);
+        }
         #endregion
 
         #region Page Curves
@@ -786,6 +791,7 @@ namespace NormalChart
             }
         }
         #endregion
+
 
     }
 }

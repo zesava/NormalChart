@@ -83,6 +83,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnCreateDataLog = new System.Windows.Forms.Button();
             this.tbNameFilter = new NormalChart.PlaceHolderTextBox();
+            this.tbtnZoom100 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabControl.SuspendLayout();
@@ -117,7 +118,8 @@
             this.toolStripSeparator2,
             this.tbtnAbout,
             this.tbtnSettings,
-            this.tbtnRefresh});
+            this.tbtnRefresh,
+            this.tbtnZoom100});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(789, 40);
@@ -206,7 +208,7 @@
             "1 day"});
             this.tbtnResolution.Name = "tbtnResolution";
             this.tbtnResolution.Size = new System.Drawing.Size(75, 40);
-            this.tbtnResolution.Text = "15 min";
+            this.tbtnResolution.SelectedIndex = 0;
             this.tbtnResolution.SelectedIndexChanged += new System.EventHandler(this.tbtnResolution_SelectedIndexChanged);
             // 
             // tbtnForward
@@ -760,6 +762,19 @@
             this.tbNameFilter.Text = "Name Filter...";
             this.tbNameFilter.TextChanged += new System.EventHandler(this.tbNameFilter_TextChanged);
             // 
+            // tbtnZoom100
+            // 
+            this.tbtnZoom100.AutoSize = false;
+            this.tbtnZoom100.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tbtnZoom100.Enabled = false;
+            this.tbtnZoom100.Image = ((System.Drawing.Image)(resources.GetObject("tbtnZoom100.Image")));
+            this.tbtnZoom100.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.tbtnZoom100.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tbtnZoom100.Name = "tbtnZoom100";
+            this.tbtnZoom100.Size = new System.Drawing.Size(50, 37);
+            this.tbtnZoom100.Text = "Zoom 100%";
+            this.tbtnZoom100.Click += new System.EventHandler(this.tbtnZoom100_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -850,6 +865,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ToolStripButton tbtnRefresh;
+        private System.Windows.Forms.ToolStripButton tbtnZoom100;
     }
 }
 
