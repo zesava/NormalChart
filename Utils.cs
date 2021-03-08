@@ -74,7 +74,7 @@ namespace NormalChart
 
         public static void DataTableToCSV(DataTable dt, string path)
         {
-            TextWriter writer = new StreamWriter(path);
+            TextWriter writer = new StreamWriter(path, false, Encoding.Default);
             writer.WriteLine("sep=,");
 
             IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().

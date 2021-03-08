@@ -502,7 +502,8 @@ namespace NormalChart
 
         private void btnRename_Click(object sender, EventArgs e)
         {
-            InputDialog dialog = new InputDialog("Rename datalog", "Name", "");
+            InputDialog dialog = new InputDialog("Rename datalog", "Name", lbAviableCurves.GetItemText(lbAviableCurves.SelectedItem));
+            dialog.TopMost = true;
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 string result_text = dialog.ResultText;
